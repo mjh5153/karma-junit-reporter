@@ -1,1 +1,5 @@
 node_modules
+
+#Optional local history
+.history
+
