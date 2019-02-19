@@ -49,7 +49,7 @@ describe('JUnit reporter', function () {
 
   beforeEach(function () {
     fakeFs = {
-      writeFileSync: sinon.spy()
+      writeFile: sinon.spy()
     }
 
     reporterModule = proxyquire('..', {
@@ -104,8 +104,8 @@ describe('JUnit reporter', function () {
     nxreporter.specSuccess(fakeBrowser, fakeResult)
     nxreporter.onBrowserComplete(fakeBrowser)
     nxreporter.onRunComplete()
-    console.log('fake fs!!!!!!!!', fakeFs.writeFileSync)
-    var writtenXml = fakeFs.writeFileSync.firstCall.args[1]
+
+    var writtenXml = fakeFs.writeFile.firstCall.args[1]
     var extFileError = false
     var xmlParseError = false
 
@@ -166,9 +166,9 @@ describe('JUnit reporter', function () {
     reporter.onBrowserComplete(fakeBrowser)
     reporter.onRunComplete()
 
-    expect(fakeFs.writeFileSync).to.have.been.called
-
-    var writtenXml = fakeFs.writeFileSync.firstCall.args[1]
+    expect(fakeFs.writeFile).to.have.been.called
+    console.log('fake fs', fakeFs.writeFile);
+    var writtenXml = fakeFs.writeFile.calls[0].args[1]
     expect(writtenXml).to.have.string('testcase name="Sender using it get request should not fail"')
   })
 

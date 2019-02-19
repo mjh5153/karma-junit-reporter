@@ -49,7 +49,7 @@ describe('JUnit reporter', function () {
 
   beforeEach(function () {
     fakeFs = {
-      writeFileSync: sinon.spy()
+      writeFile: sinon.spy()
     }
 
     reporterModule = proxyquire('..', {
@@ -168,7 +168,7 @@ describe('JUnit reporter', function () {
 
     expect(fakeFs.writeFileSync).to.have.been.called
 
-    var writtenXml = fakeFs.writeFileSync.firstCall.args[1]
+    var writtenXml = fakeFs.writeFile.firstCall.args[1]
     expect(writtenXml).to.have.string('testcase name="Sender using it get request should not fail"')
   })
 

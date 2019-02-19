@@ -114,19 +114,20 @@ var JUnitReporter = function (baseReporterDecorator, config, logger, helper, for
     if (!xmlToOutput) {
       return // don't die if browser didn't start
     }
-    console.log('logger-------', log)
+
     pendingFileWritings++
     helper.mkdirIfNotExists(path.dirname(newOutputFile), function () {
-      try {
-        fs.writeFileSync(newOutputFile, xmlToOutput.end({pretty: true}))
-        log.debug('JUnit results written to "%s".', newOutputFile)
-      } catch (err) {
-        log.warn('Cannot write JUnit xml\n\t' + err.message)
-      } finally {
+      fs.writeFile(newOutputFile, xmlToOutput.end({pretty: true}), function (err) {
+        if (err) {
+          log.warn('Cannot write JUnit xml\n\t' + err.message)
+        } else {
+          log.debug('JUnit results written to "%s".', newOutputFile)
+        }
+
         if (!--pendingFileWritings) {
           fileWritingFinished()
         }
-      }
+      })
     })
   }
 

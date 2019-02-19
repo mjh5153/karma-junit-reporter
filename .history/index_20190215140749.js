@@ -114,7 +114,7 @@ var JUnitReporter = function (baseReporterDecorator, config, logger, helper, for
     if (!xmlToOutput) {
       return // don't die if browser didn't start
     }
-    console.log('logger-------', log)
+    console.log('logger-------', log);
     pendingFileWritings++
     helper.mkdirIfNotExists(path.dirname(newOutputFile), function () {
       try {

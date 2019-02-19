@@ -11,12 +11,7 @@ var schemaPath = './sonar-unit-tests.xsd'
 
 chai.use(require('sinon-chai'))
 
-function warn () {}
-function noop () {
-  return {
-    warn: warn
-  }
-}
+function noop () {}
 
 var fakeLogger = {
   create: noop,
@@ -49,7 +44,7 @@ describe('JUnit reporter', function () {
 
   beforeEach(function () {
     fakeFs = {
-      writeFileSync: sinon.spy()
+      writeFile: sinon.spy()
     }
 
     reporterModule = proxyquire('..', {
@@ -61,7 +56,7 @@ describe('JUnit reporter', function () {
     reporter = new reporterModule['reporter:junit'][1](fakeBaseReporterDecorator, fakeConfig, fakeLogger, fakeHelper)
   })
 
-  it('should produce valid XML per the new SonarQube reporting format test', function () {
+  it('should produce valid XML per the new SonarQube reporting format', function () {
     // Two differences in this test, compared to other tests:
     // a) we have a different configuration for the reporter
     // b) need a instantiation of the reporter - the beforeEach doesn't work since it is for old XML
@@ -97,15 +92,14 @@ describe('JUnit reporter', function () {
         xmlVersion: 1
       }
     }
-    console.log('fake logger!!!!!!!!', fakeLogger)
     // Grab a new reporter, configured with xmlVersion flag
     var nxreporter = new reporterModule['reporter:junit'][1](fakeBaseReporterDecorator, newFakeConfig, fakeLogger, fakeHelper)
     nxreporter.onRunStart([ fakeBrowser ])
     nxreporter.specSuccess(fakeBrowser, fakeResult)
     nxreporter.onBrowserComplete(fakeBrowser)
     nxreporter.onRunComplete()
-    console.log('fake fs!!!!!!!!', fakeFs.writeFileSync)
-    var writtenXml = fakeFs.writeFileSync.firstCall.args[1]
+
+    var writtenXml = fakeFs.writeFile.firstCall.args[1]
     var extFileError = false
     var xmlParseError = false
 
@@ -166,9 +160,9 @@ describe('JUnit reporter', function () {
     reporter.onBrowserComplete(fakeBrowser)
     reporter.onRunComplete()
 
-    expect(fakeFs.writeFileSync).to.have.been.called
+    expect(fakeFs.writeFile).to.have.been.called
 
-    var writtenXml = fakeFs.writeFileSync.firstCall.args[1]
+    var writtenXml = fakeFs.writeFile.firstCall.args[1]
     expect(writtenXml).to.have.string('testcase name="Sender using it get request should not fail"')
   })
 
